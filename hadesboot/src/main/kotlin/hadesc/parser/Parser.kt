@@ -16,7 +16,7 @@ internal typealias tt = Token.Kind
 private val declarationRecoveryTokens = setOf(
         tt.EOF, tt.IMPORT, tt.DEF, tt.EXTERN, tt.STRUCT, tt.CONST,
         tt.TRAIT, tt.IMPLEMENTATION, tt.AT_SYMBOL,
-        tt.TYPE, tt.EXTENSION
+        tt.TYPE, tt.EXTENSION, tt.ENUM
 )
 private val statementPredictors = setOf(
     tt.RETURN, tt.VAL, tt.WHILE, tt.IF,
@@ -118,7 +118,7 @@ class Parser(
             tt.EXTENSION -> parseExtensionDef()
             tt.TRAIT -> parseTraitDef()
             tt.IMPLEMENTATION -> parseImplementationDef()
-            tt.SEALED -> parseSealedDef(decorators)
+            tt.ENUM -> parseEnumDef(decorators)
             else -> {
                 syntaxError(currentToken.location, Diagnostic.Kind.DeclarationExpected)
             }
@@ -144,9 +144,8 @@ class Parser(
         )
     }
 
-    private fun parseSealedDef(decorators: List<Decorator>): Declaration {
-        val start = expect(tt.SEALED)
-        expect(tt.TYPE)
+    private fun parseEnumDef(decorators: List<Decorator>): Declaration {
+        val start = expect(tt.ENUM)
         val name = parseBinder()
         val typeParams = parseOptionalTypeParams()
         expect(tt.LBRACE)

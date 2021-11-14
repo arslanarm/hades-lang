@@ -279,7 +279,7 @@ Sealed types (also known as algebraic data types) allow you to represent types t
 of cases.
 ```kotlin
 
-sealed type Optional[T] {
+enum Optional[T] {
   Some(value: T);
   None;
 }
